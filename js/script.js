@@ -16,6 +16,8 @@ FSJS project 2 - List Filter and Pagination
    will only be used inside of a function, then it can be locally 
    scoped to that function.
 ***/
+const studentList = document.querySelectorAll("li.student-item");
+const itemsPerPage = 10;
 
 
 
@@ -35,6 +37,26 @@ FSJS project 2 - List Filter and Pagination
        "invoke" the function 
 ***/
 
+function showPage(list, pageNumber)
+{
+   let startIndex = pageNumber * itemsPerPage - itemsPerPage;
+   let endIndex = pageNumber * itemsPerPage;
+
+   for (i = 0; i < list.length; i++)
+   {
+      if (i < startIndex || i >= endIndex)
+      {
+         list[i].style.display = "none";
+      }
+      else
+      {
+         list[i].style.display = "block";
+      }
+   }
+
+   
+}
+
 
 
 
@@ -42,7 +64,98 @@ FSJS project 2 - List Filter and Pagination
    Create the `appendPageLinks function` to generate, append, and add 
    functionality to the pagination buttons.
 ***/
+function appendPageLinks(list)
+{
+ pageDiv = document.querySelector("div.page");
 
+ var paginationDiv = document.createElement("DIV"); 
+
+ paginationDiv.classList.add("pagination");
+
+ var paginationUl = document.createElement("UL");
+
+ paginationDiv.appendChild(paginationUl);
+
+ var numberOfPages = Math.ceil(studentList.length / itemsPerPage);
+
+ for(i = 0; i < numberOfPages; i++)
+{
+   var liNode = document.createElement("LI");
+
+   var aNode = document.createElement("A");
+
+   aNode.href = '#';
+
+   aNode.innerHTML = i+1;
+
+   if(i==0)
+   {
+      aNode.classList.add("active");
+   }
+
+   liNode.appendChild(aNode);
+
+   paginationUl.appendChild(liNode);
+}
+
+ pageDiv.appendChild(paginationDiv);
+
+ showPage(studentList, 1);
+
+}
+
+appendPageLinks(studentList);
+
+paginationDiv = document.querySelector("div.pagination");
+
+paginationDiv.addEventListener("click", (event) => {
+
+   var clickedNode = event.target;
+
+   
+
+   var pageAnchorNodes = document.querySelectorAll(".pagination a");
+
+   
+
+   for(i = 0; i < pageAnchorNodes.length; i++)
+   {
+      pageAnchorNodes[i].className = '';
+   }
+
+   clickedNode.className = "active";
+
+   var pageNumber = clickedNode.innerHTML;
+
+   showPage(studentList, pageNumber);
+
+});
+
+
+
+/*
+ <!-- pagination HTML to create dynamically -->
+      <div class="pagination">
+        <ul>
+          <li>
+            <a class="active" href="#">1</a>
+          </li>
+           <li>
+            <a href="#">2</a>
+          </li>
+           <li>
+            <a href="#">3</a>
+          </li>
+           <li>
+            <a href="#">4</a>
+          </li>
+           <li>
+            <a href="#">5</a>
+          </li>
+        </ul>
+      </div>
+      <!-- end pagination -->
+ */
 
 
 

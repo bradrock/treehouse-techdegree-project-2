@@ -19,6 +19,8 @@ FSJS project 2 - List Filter and Pagination
 const studentList = document.querySelectorAll("li.student-item");
 const itemsPerPage = 10;
 
+var pageNumber;
+
 
 
 
@@ -106,7 +108,7 @@ function appendPageLinks(list)
 
 appendPageLinks(studentList);
 
-paginationDiv = document.querySelector("div.pagination");
+let paginationDiv = document.querySelector("div.pagination");
 
 paginationDiv.addEventListener("click", (event) => {
 
@@ -125,13 +127,58 @@ paginationDiv.addEventListener("click", (event) => {
 
    clickedNode.className = "active";
 
-   var pageNumber = clickedNode.innerHTML;
+   pageNumber = clickedNode.innerHTML;
 
    showPage(studentList, pageNumber);
 
 });
 
 
+var headerDiv = document.querySelector("div.page-header");
+
+var searchDiv = document.createElement("DIV");
+
+searchDiv.classList.add("student-search");
+
+var inputElement = document.createElement("INPUT");
+
+inputElement.placeholder = "Search for students...";
+
+var buttonElement = document.createElement("BUTTON");
+
+buttonElement.innerHTML = "Search";
+
+searchDiv.appendChild(inputElement);
+
+searchDiv.appendChild(buttonElement);
+
+headerDiv.appendChild(searchDiv);
+
+buttonElement.addEventListener('click', () => {
+  
+   
+
+   const inputText = inputElement.value;
+
+   console.log(inputText);
+
+});
+
+inputElement.addEventListener('keyup', () => {
+
+
+
+
+});
+
+
+function executeSearch()
+{
+   showPage(studentList, pageNumber);
+
+   
+
+}
 
 /*
  <!-- pagination HTML to create dynamically -->

@@ -19,7 +19,7 @@ FSJS project 2 - List Filter and Pagination
 const studentList = document.querySelectorAll("li.student-item");
 const itemsPerPage = 10;
 
-var pageNumber;
+var pageNumber = 1;
 
 
 
@@ -39,21 +39,45 @@ var pageNumber;
        "invoke" the function 
 ***/
 
-function showPage(list, pageNumber)
+function showPage(list, pageNumber, searchString)
 {
    let startIndex = pageNumber * itemsPerPage - itemsPerPage;
    let endIndex = pageNumber * itemsPerPage;
 
+   console.log("Search string is " + searchString);
+
    for (i = 0; i < list.length; i++)
    {
-      if (i < startIndex || i >= endIndex)
+
+      const studentNameNode = list[i].querySelector("h3");
+
+      const studentName = studentNameNode.innerHTML;
+
+      console.log("Student name is " + studentName +".");
+
+      if (i >= startIndex && i < endIndex)
       {
-         list[i].style.display = "none";
+         
+         if((searchString.length > 0 && studentName.toLowerCase().includes(searchString.toLowerCase())) || searchString.length == 0)
+         {
+            //console.log("First part of conditional is " + (searchString.length > 0 && studentName.toLowerCase().includes(searchString.toLowerCase())));
+            //console.log("Second part of conditional is " + (searchString.length == 0));
+            console.log("Made it here");
+            list[i].style.display = "block";
+
+         }
+         else
+         {
+            list[i].style.display = "none";
+         }
+         
       }
       else
-      {
-         list[i].style.display = "block";
-      }
+         {
+            list[i].style.display = "none";
+         }
+      
+      
    }
 
    
@@ -102,7 +126,7 @@ function appendPageLinks(list)
 
  pageDiv.appendChild(paginationDiv);
 
- showPage(studentList, 1);
+ showPage(studentList, pageNumber, "");
 
 }
 
@@ -129,7 +153,7 @@ paginationDiv.addEventListener("click", (event) => {
 
    pageNumber = clickedNode.innerHTML;
 
-   showPage(studentList, pageNumber);
+   showPage(studentList, pageNumber, "");
 
 });
 
@@ -160,23 +184,28 @@ buttonElement.addEventListener('click', () => {
 
    const inputText = inputElement.value;
 
+   executeSearch(inputText);
+
    console.log(inputText);
 
 });
 
 inputElement.addEventListener('keyup', () => {
 
+   const inputText = inputElement.value;
 
+   //console.log(inputText);
 
+   executeSearch(inputText);
 
 });
 
 
-function executeSearch()
+function executeSearch(searchText)
 {
-   showPage(studentList, pageNumber);
+   showPage(studentList, pageNumber, searchText);
 
-   
+
 
 }
 

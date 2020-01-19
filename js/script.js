@@ -16,13 +16,31 @@ FSJS project 2 - List Filter and Pagination
    will only be used inside of a function, then it can be locally 
    scoped to that function.
 ***/
+
+//perform initial setup
 const studentList = document.querySelectorAll("li.student-item");
 const itemsPerPage = 10;
 
 var pageNumber = 1;
 
+assignMatchClassToNodes("");
+
+showPage(studentList, 1);
 
 
+
+const paginationDiv = document.createElement("DIV"); 
+
+paginationDiv.classList.add("pagination");
+
+const pageDiv = document.querySelector("div.page");
+
+pageDiv.appendChild(paginationDiv);
+
+
+appendPageLinks(studentList);
+
+//end of initial setup
 
 /*** 
    Create the `showPage` function to hide all of the items in the 
@@ -39,37 +57,59 @@ var pageNumber = 1;
        "invoke" the function 
 ***/
 
-function showPage(list, pageNumber, searchString)
+function showPage(list, pageNumber)
 {
+   console.log(pageNumber);
    let startIndex = pageNumber * itemsPerPage - itemsPerPage;
    let endIndex = pageNumber * itemsPerPage;
 
-   console.log("Search string is " + searchString);
+   //console.log("Search string is " + searchString);
+
+   //create a list that only contains student list items that match search string
+
+   
+
+
+      // for (i = 0; i < studentList.length; i++)
+      // {
+
+      // const studentNameNode = list[i].querySelector("h3");
+
+      // const studentName = studentNameNode.innerHTML;
+
+      //console.log("Student name is " + studentName +".");
+
+      //    if((searchString.length > 0 && studentName.toLowerCase().includes(searchString.toLowerCase())) || searchString.length == 0)
+      //    {
+      //       matchList.push(list[i]);
+      //    }
+
+      //    else
+      //    {
+      //       list[i].style.display = "none";
+      //    }
+
+       //}
+
+      
+   
 
    for (i = 0; i < list.length; i++)
    {
 
-      const studentNameNode = list[i].querySelector("h3");
+      
 
-      const studentName = studentNameNode.innerHTML;
-
-      console.log("Student name is " + studentName +".");
 
       if (i >= startIndex && i < endIndex)
       {
          
-         if((searchString.length > 0 && studentName.toLowerCase().includes(searchString.toLowerCase())) || searchString.length == 0)
-         {
+      
             //console.log("First part of conditional is " + (searchString.length > 0 && studentName.toLowerCase().includes(searchString.toLowerCase())));
             //console.log("Second part of conditional is " + (searchString.length == 0));
-            console.log("Made it here");
+            //console.log("Made it here");
             list[i].style.display = "block";
 
-         }
-         else
-         {
-            list[i].style.display = "none";
-         }
+         
          
       }
       else
@@ -79,8 +119,6 @@ function showPage(list, pageNumber, searchString)
       
       
    }
-
-   
 }
 
 
@@ -92,47 +130,64 @@ function showPage(list, pageNumber, searchString)
 ***/
 function appendPageLinks(list)
 {
- pageDiv = document.querySelector("div.page");
 
- var paginationDiv = document.createElement("DIV"); 
+   //remove existing links, if they exist
+   const exPaginationUl = document.querySelector(".pagination ul");
 
- paginationDiv.classList.add("pagination");
-
- var paginationUl = document.createElement("UL");
-
- paginationDiv.appendChild(paginationUl);
-
- var numberOfPages = Math.ceil(studentList.length / itemsPerPage);
-
- for(i = 0; i < numberOfPages; i++)
-{
-   var liNode = document.createElement("LI");
-
-   var aNode = document.createElement("A");
-
-   aNode.href = '#';
-
-   aNode.innerHTML = i+1;
-
-   if(i==0)
+   if (exPaginationUl)
    {
-      aNode.classList.add("active");
+
+   exPaginationUl.parentNode.removeChild(exPaginationUl);
+
    }
 
-   liNode.appendChild(aNode);
+   //create new pagination ul
 
-   paginationUl.appendChild(liNode);
+   
+
+  
+
+   var paginationUl = document.createElement("UL");
+
+   paginationDiv.appendChild(paginationUl);
+
+   var numberOfPages = Math.ceil(list.length / itemsPerPage);
+
+   for(i = 0; i < numberOfPages; i++)
+   {
+      var liNode = document.createElement("LI");
+
+      var aNode = document.createElement("A");
+
+      aNode.href = '#';
+
+      aNode.innerHTML = i+1;
+
+      if(i==0)
+      {
+         aNode.classList.add("active");
+      }
+
+      liNode.appendChild(aNode);
+
+      paginationUl.appendChild(liNode);
+   }
+
+ 
+
+ 
+
 }
 
- pageDiv.appendChild(paginationDiv);
 
- showPage(studentList, pageNumber, "");
 
-}
 
-appendPageLinks(studentList);
 
-let paginationDiv = document.querySelector("div.pagination");
+
+
+
+
+
 
 paginationDiv.addEventListener("click", (event) => {
 
@@ -151,9 +206,11 @@ paginationDiv.addEventListener("click", (event) => {
 
    clickedNode.className = "active";
 
-   pageNumber = clickedNode.innerHTML;
+   var pageNumber = clickedNode.innerHTML;
 
-   showPage(studentList, pageNumber, "");
+   const matchList = getMatchList();
+
+   showPage(matchList, pageNumber);
 
 });
 
@@ -186,7 +243,7 @@ buttonElement.addEventListener('click', () => {
 
    executeSearch(inputText);
 
-   console.log(inputText);
+   //console.log(inputText);
 
 });
 
@@ -203,10 +260,71 @@ inputElement.addEventListener('keyup', () => {
 
 function executeSearch(searchText)
 {
-   showPage(studentList, pageNumber, searchText);
+   
+   pageNumber = 1;
+
+   
+
+   assignMatchClassToNodes(searchText);
+
+   const matchList = getMatchList();
 
 
+   const nonMatchList = getNonMatchList();
 
+       for (i = 0; i < nonMatchList.length; i++)
+       {
+    
+             nonMatchList[i].style.display = "none";
+          
+       }
+
+
+   showPage(matchList, pageNumber);
+
+   appendPageLinks(matchList);
+
+}
+
+function assignMatchClassToNodes(searchString)
+{
+   for (i = 0; i < studentList.length; i++)
+   {
+
+      //first reset by removing all match class assignments
+      studentList[i].classList.remove("match");
+      
+//extract node with the name in it
+   const studentNameNode = studentList[i].querySelector("h3");
+
+   //assign the text string with the name to studentName variable
+   const studentName = studentNameNode.innerHTML;
+
+      
+
+      if((searchString.length > 0 && studentName.toLowerCase().includes(searchString.toLowerCase())) || searchString.length == 0)
+      {
+         studentList[i].classList.add("match");
+      }
+
+   }
+
+}
+
+function getMatchList()
+{
+   //const matchList = studentList.querySelectorAll(".match");
+
+   const matchList = document.querySelectorAll("li.student-item.match")
+
+   return matchList;
+}
+
+function getNonMatchList()
+{
+   const nonMatchList = document.querySelectorAll("li.student-item:not(.match)");
+
+   return nonMatchList;
 }
 
 /*

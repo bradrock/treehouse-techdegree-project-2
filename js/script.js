@@ -25,6 +25,20 @@ var pageNumber = 1;
 
 assignMatchClassToNodes("");
 
+const pageDiv = document.querySelector("div.page");
+
+
+
+const noMatchMessageElement = document.createElement("H3");
+
+noMatchMessageElement.innerText = "No matches found."
+
+noMatchMessageElement.style.display = "none"; //will be turned on if there are no matches
+
+pageDiv.appendChild(noMatchMessageElement);
+
+
+
 showPage(studentList, 1);
 
 
@@ -33,9 +47,8 @@ const paginationDiv = document.createElement("DIV");
 
 paginationDiv.classList.add("pagination");
 
-const pageDiv = document.querySelector("div.page");
-
 pageDiv.appendChild(paginationDiv);
+
 
 
 appendPageLinks(studentList);
@@ -62,6 +75,16 @@ function showPage(list, pageNumber)
    console.log(pageNumber);
    let startIndex = pageNumber * itemsPerPage - itemsPerPage;
    let endIndex = pageNumber * itemsPerPage;
+
+
+   if (list.length == 0)
+   {
+      noMatchMessageElement.style.display = "block"
+   }
+   else
+   {
+      noMatchMessageElement.style.display = "none";
+   }
 
    //console.log("Search string is " + searchString);
 

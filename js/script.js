@@ -1,32 +1,33 @@
 /******************************************
 Treehouse Techdegree:
 FSJS project 2 - List Filter and Pagination
+by Brad Rock
 ******************************************/
    
-// Study guide for this project - https://drive.google.com/file/d/1OD1diUsTMdpfMDv677TfL1xO2CEkykSz/view?usp=sharing
 
+//main script***************************************************************************
 
-/*** 
-   Add your global variables that store the DOM elements you will 
-   need to reference and/or manipulate. 
-   
-   But be mindful of which variables should be global and which 
-   should be locally scoped to one of the two main functions you're 
-   going to create. A good general rule of thumb is if the variable 
-   will only be used inside of a function, then it can be locally 
-   scoped to that function.
-***/
-
-//perform initial setup
+//get student list from HTML file
 const studentList = document.querySelectorAll("li.student-item");
+
+//set the number of students that will display per page
 const itemsPerPage = 10;
 
+//will be used to set the initial page number--will be page 1 to start
 var pageNumber = 1;
 
+
+
+/*
+   assigns "match" class in HTML to all students initially for appendPageLinks function's
+   purposes--all students considered a "match" initially with no search terms entered
+*/
 assignMatchClassToNodes("");
 
-const pageDiv = document.querySelector("div.page");
 
+
+//set up global DOM variables
+const pageDiv = document.querySelector("div.page");
 
 
 const noMatchMessageElement = document.createElement("H3");
@@ -38,11 +39,6 @@ noMatchMessageElement.style.display = "none"; //will be turned on if there are n
 pageDiv.appendChild(noMatchMessageElement);
 
 
-
-showPage(studentList, 1);
-
-
-
 const paginationDiv = document.createElement("DIV"); 
 
 paginationDiv.classList.add("pagination");
@@ -50,192 +46,6 @@ paginationDiv.classList.add("pagination");
 pageDiv.appendChild(paginationDiv);
 
 
-
-appendPageLinks(studentList);
-
-//end of initial setup
-
-/*** 
-   Create the `showPage` function to hide all of the items in the 
-   list except for the ten you want to show.
-
-   Pro Tips: 
-     - Keep in mind that with a list of 54 students, the last page 
-       will only display four.
-     - Remember that the first student has an index of 0.
-     - Remember that a function `parameter` goes in the parens when 
-       you initially define the function, and it acts as a variable 
-       or a placeholder to represent the actual function `argument` 
-       that will be passed into the parens later when you call or 
-       "invoke" the function 
-***/
-
-function showPage(list, pageNumber)
-{
-   console.log(pageNumber);
-   let startIndex = pageNumber * itemsPerPage - itemsPerPage;
-   let endIndex = pageNumber * itemsPerPage;
-
-
-   if (list.length == 0)
-   {
-      noMatchMessageElement.style.display = "block"
-   }
-   else
-   {
-      noMatchMessageElement.style.display = "none";
-   }
-
-   //console.log("Search string is " + searchString);
-
-   //create a list that only contains student list items that match search string
-
-   
-
-
-      // for (i = 0; i < studentList.length; i++)
-      // {
-
-      // const studentNameNode = list[i].querySelector("h3");
-
-      // const studentName = studentNameNode.innerHTML;
-
-      //console.log("Student name is " + studentName +".");
-
-      //    if((searchString.length > 0 && studentName.toLowerCase().includes(searchString.toLowerCase())) || searchString.length == 0)
-      //    {
-      //       matchList.push(list[i]);
-      //    }
-
-      //    else
-      //    {
-      //       list[i].style.display = "none";
-      //    }
-
-       //}
-
-      
-   
-
-   for (i = 0; i < list.length; i++)
-   {
-
-      
-
-
-      if (i >= startIndex && i < endIndex)
-      {
-         
-      
-            //console.log("First part of conditional is " + (searchString.length > 0 && studentName.toLowerCase().includes(searchString.toLowerCase())));
-            //console.log("Second part of conditional is " + (searchString.length == 0));
-            //console.log("Made it here");
-            list[i].style.display = "block";
-
-         
-         
-      }
-      else
-         {
-            list[i].style.display = "none";
-         }
-      
-      
-   }
-}
-
-
-
-
-/*** 
-   Create the `appendPageLinks function` to generate, append, and add 
-   functionality to the pagination buttons.
-***/
-function appendPageLinks(list)
-{
-
-   //remove existing links, if they exist
-   const exPaginationUl = document.querySelector(".pagination ul");
-
-   if (exPaginationUl)
-   {
-
-   exPaginationUl.parentNode.removeChild(exPaginationUl);
-
-   }
-
-   //create new pagination ul
-
-   
-
-  
-
-   var paginationUl = document.createElement("UL");
-
-   paginationDiv.appendChild(paginationUl);
-
-   var numberOfPages = Math.ceil(list.length / itemsPerPage);
-
-   for(i = 0; i < numberOfPages; i++)
-   {
-      var liNode = document.createElement("LI");
-
-      var aNode = document.createElement("A");
-
-      aNode.href = '#';
-
-      aNode.innerHTML = i+1;
-
-      if(i==0)
-      {
-         aNode.classList.add("active");
-      }
-
-      liNode.appendChild(aNode);
-
-      paginationUl.appendChild(liNode);
-   }
-
- 
-
- 
-
-}
-
-
-
-
-
-
-
-
-
-
-
-paginationDiv.addEventListener("click", (event) => {
-
-   var clickedNode = event.target;
-
-   
-
-   var pageAnchorNodes = document.querySelectorAll(".pagination a");
-
-   
-
-   for(i = 0; i < pageAnchorNodes.length; i++)
-   {
-      pageAnchorNodes[i].className = '';
-   }
-
-   clickedNode.className = "active";
-
-   var pageNumber = clickedNode.innerHTML;
-
-   const matchList = getMatchList();
-
-   showPage(matchList, pageNumber);
-
-});
 
 
 var headerDiv = document.querySelector("div.page-header");
@@ -258,27 +68,155 @@ searchDiv.appendChild(buttonElement);
 
 headerDiv.appendChild(searchDiv);
 
-buttonElement.addEventListener('click', () => {
-  
+
+
+//show the page
+showPage(studentList, 1);
+
+
+//append the page links
+appendPageLinks(studentList);
+
+
+
+//end of main script*****************************************************************
+
+
+
+
+
+//functions and event listeners*****************************************************
+
+function showPage(list, pageNumber)
+{
+   
+   let startIndex = pageNumber * itemsPerPage - itemsPerPage;
+   let endIndex = pageNumber * itemsPerPage;
+
+//if the list of students passed is zero in length, then show the "No matches" message.
+   if (list.length == 0)
+   {
+      noMatchMessageElement.style.display = "block"
+   }
+   else
+   {
+      noMatchMessageElement.style.display = "none";
+   }
+
    
 
+   for (i = 0; i < list.length; i++)
+   {
+
+      if (i >= startIndex && i < endIndex)
+      {
+         list[i].style.display = "block";
+      }
+      else
+      {
+         list[i].style.display = "none";
+      }
+      
+   }
+}
+
+
+function appendPageLinks(list)
+{
+
+   //remove existing links, if there are any
+   const exPaginationUl = document.querySelector(".pagination ul");
+
+   if (exPaginationUl)
+   {
+      exPaginationUl.parentNode.removeChild(exPaginationUl);
+   }
+
+
+   //create new pagination ul
+
+   var paginationUl = document.createElement("UL");
+
+   paginationDiv.appendChild(paginationUl);
+
+   var numberOfPages = Math.ceil(list.length / itemsPerPage);
+
+   for(i = 0; i < numberOfPages; i++)
+   {
+      var liNode = document.createElement("LI");
+
+      var aNode = document.createElement("A");
+
+      aNode.href = '#';
+
+      aNode.innerHTML = i+1;
+
+      //set page 1 active to start
+      if(i==0)
+      {
+         aNode.classList.add("active");
+      }
+
+      liNode.appendChild(aNode);
+
+      paginationUl.appendChild(liNode);
+   }
+
+}
+
+
+
+
+paginationDiv.addEventListener("click", (event) => {
+
+   var clickedNode = event.target;
+
+   var pageAnchorNodes = document.querySelectorAll(".pagination a");
+
+   for(i = 0; i < pageAnchorNodes.length; i++)
+   {
+      pageAnchorNodes[i].className = '';
+   }
+
+   //make the node that was clicked the active one
+   clickedNode.className = "active";
+
+   //get the page number to tell showPage what page to show
+   var pageNumber = clickedNode.innerHTML;
+
+   
+   const matchList = getMatchList();
+
+   showPage(matchList, pageNumber);
+
+});
+
+
+
+
+
+
+
+
+//execute the search if the search button is clicked
+buttonElement.addEventListener('click', () => {
+  
    const inputText = inputElement.value;
 
    executeSearch(inputText);
 
-   //console.log(inputText);
-
 });
 
+
+//execute the search if there is a keyup event in the input field
 inputElement.addEventListener('keyup', () => {
 
    const inputText = inputElement.value;
 
-   //console.log(inputText);
-
    executeSearch(inputText);
 
 });
+
 
 
 function executeSearch(searchText)
@@ -286,12 +224,9 @@ function executeSearch(searchText)
    
    pageNumber = 1;
 
-   
-
    assignMatchClassToNodes(searchText);
 
    const matchList = getMatchList();
-
 
    const nonMatchList = getNonMatchList();
 
@@ -302,12 +237,16 @@ function executeSearch(searchText)
           
        }
 
-
+   //pass only the list of matches to the showPage function
    showPage(matchList, pageNumber);
 
    appendPageLinks(matchList);
 
 }
+
+
+
+
 
 function assignMatchClassToNodes(searchString)
 {
@@ -317,11 +256,11 @@ function assignMatchClassToNodes(searchString)
       //first reset by removing all match class assignments
       studentList[i].classList.remove("match");
       
-//extract node with the name in it
-   const studentNameNode = studentList[i].querySelector("h3");
+      //extract node with the name in it
+      const studentNameNode = studentList[i].querySelector("h3");
 
-   //assign the text string with the name to studentName variable
-   const studentName = studentNameNode.innerHTML;
+      //assign the text string with the name to studentName variable
+      const studentName = studentNameNode.innerHTML;
 
       
 
@@ -334,14 +273,16 @@ function assignMatchClassToNodes(searchString)
 
 }
 
+
+
 function getMatchList()
 {
-   //const matchList = studentList.querySelectorAll(".match");
-
    const matchList = document.querySelectorAll("li.student-item.match")
 
    return matchList;
 }
+
+
 
 function getNonMatchList()
 {
@@ -350,31 +291,5 @@ function getNonMatchList()
    return nonMatchList;
 }
 
-/*
- <!-- pagination HTML to create dynamically -->
-      <div class="pagination">
-        <ul>
-          <li>
-            <a class="active" href="#">1</a>
-          </li>
-           <li>
-            <a href="#">2</a>
-          </li>
-           <li>
-            <a href="#">3</a>
-          </li>
-           <li>
-            <a href="#">4</a>
-          </li>
-           <li>
-            <a href="#">5</a>
-          </li>
-        </ul>
-      </div>
-      <!-- end pagination -->
- */
 
 
-
-
-// Remember to delete the comments that came with this file, and replace them with your own code comments.

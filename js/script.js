@@ -120,7 +120,7 @@ function showPage(list, pageNumber)
    }
 }
 
-
+//appends links to bottom of page
 function appendPageLinks(list)
 {
 
@@ -166,7 +166,7 @@ function appendPageLinks(list)
 
 
 
-
+//event listener for pagination div (page number links)
 paginationDiv.addEventListener("click", (event) => {
 
    var clickedNode = event.target;
@@ -217,8 +217,10 @@ inputElement.addEventListener('keyup', () => {
 
 });
 
-
-
+/*
+   executes search by assigning match class to nodes based on search terms
+   and calls showPage and appendPageLinks using new match list
+*/
 function executeSearch(searchText)
 {
    
@@ -247,7 +249,7 @@ function executeSearch(searchText)
 
 
 
-
+//assigns the "match" class to student nodes based on a search string
 function assignMatchClassToNodes(searchString)
 {
    for (i = 0; i < studentList.length; i++)
@@ -274,7 +276,7 @@ function assignMatchClassToNodes(searchString)
 }
 
 
-
+//gets a list of students that have the "match" class from the DOM
 function getMatchList()
 {
    const matchList = document.querySelectorAll("li.student-item.match")
@@ -283,7 +285,7 @@ function getMatchList()
 }
 
 
-
+//gets a list of students that don't have the "match" class from the DOM
 function getNonMatchList()
 {
    const nonMatchList = document.querySelectorAll("li.student-item:not(.match)");
